@@ -1,0 +1,22 @@
+[
+    {
+      "model": "alskitchenapi.menuitem",
+      "pk": 1,
+      "fields": {
+        "title": "Linguini",
+        "description": "Pasta so long your legs will grow",
+        "price": 12.99,
+        "type": "Main Course"
+      }
+    },
+    {
+      "model": "alskitchenapi.menuitem",
+      "pk": 2,
+      "fields": {
+        "title": "Cereal",
+        "description": "Oops All Berries all day",
+        "price": 3.99,
+        "type": "Sugary Breakfast"
+      }
+    }
+]
