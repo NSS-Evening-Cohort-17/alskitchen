@@ -17,7 +17,7 @@ class MenuItemView(ViewSet):
             serializer = MenuItemSerializer(menu_item)
             return Response(serializer.data)
         except MenuItem.DoesNotExist as e:
-            return Response({"Duley what was your Q"}, status=status.HTTP_404_NOT_FOUND)
+            return Response({}, status=status.HTTP_404_NOT_FOUND)
         
     
     def list(self, request):
@@ -38,9 +38,31 @@ class MenuItemView(ViewSet):
         )
         serializer = MenuItemSerializer(new_menu_item)
         return Response(serializer.data, status=status.HTTP_201_CREATED)
+    
+    def update(self, request, pk):
+        """ Handles a PUT request for a menu item """
+        editing_menu_item = MenuItem.objects.get(pk=pk)
         
+        editing_menu_item.title = request.data["title"]
+        editing_menu_item.description = request.data["description"]
+        editing_menu_item.price = request.data["price"]
+        editing_menu_item.type = request.data["type"]
+        editing_menu_item.wine_pairing = request.data.get("wine_pairing")
         
+        editing_menu_item.save()
+        
+        return Response(None, status=status.HTTP_204_NO_CONTENT)
 
+    def destroy(self, request, pk):
+        """ Handles a DELETE request for a menu item """
+        try:
+            menu_item = MenuItem.objects.get(pk=pk)
+            menu_item.delete()
+        except MenuItem.DoesNotExist as e:
+            return Response(None, status=status.HTTP_404_NOT_FOUND)
+        
+        return Response(None, status=status.HTTP_204_NO_CONTENT)
+        
 class MenuItemSerializer(serializers.ModelSerializer):
     """ JSON serializer for menu items """
     class Meta:
