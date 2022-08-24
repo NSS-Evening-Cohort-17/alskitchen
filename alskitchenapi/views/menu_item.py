@@ -1,4 +1,6 @@
 """ A module for handling Menu Items requests """
+from cgi import print_exception
+from turtle import title
 from rest_framework.viewsets import ViewSet
 from rest_framework.response import Response
 from rest_framework import serializers, status
@@ -23,6 +25,21 @@ class MenuItemView(ViewSet):
         menu_items = MenuItem.objects.all()
         serializer = MenuItemSerializer(menu_items, many=True)
         return Response(serializer.data)
+    
+    def create(self, request):
+        """ Handle a POST request for a menu item """
+        # incoming_user = request.auth.user
+        new_menu_item = MenuItem.objects.create(
+            title=request.data["title"],
+            description=request.data["description"],
+            price=request.data["price"],
+            type=request.data["type"],
+            wine_pairing=request.data.get("wine_pairing")
+        )
+        serializer = MenuItemSerializer(new_menu_item)
+        return Response(serializer.data, status=status.HTTP_201_CREATED)
+        
+        
 
 class MenuItemSerializer(serializers.ModelSerializer):
     """ JSON serializer for menu items """
@@ -33,4 +50,5 @@ class MenuItemSerializer(serializers.ModelSerializer):
             'title',
             'description',
             'type',
+            'price',
             'wine_pairing')
